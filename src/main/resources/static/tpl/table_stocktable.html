@@ -1,0 +1,169 @@
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">订单管理</h1>
+</div>
+<div class="wrapper-md" ng-controller="OrderController" ng-init="app.settings.container = false;">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">筛选</div>
+		<div class="panel-body">
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">客户</label>
+				<div class="col-sm-10">
+					<select ng-change="changeItem()" ng-model="selectedCustomer"
+						class="form-control m-b">
+						<option value='0'>请选择客户</option>
+						<option ng-repeat="customer in customers" value="{{customer.customerId}}">{{customer.customerName}} : {{customer.wxId}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">订单状态</label>
+				<div class="col-sm-10">
+					<select ng-change="changeItem()" ng-model="selectedStatus"
+						class="form-control m-b">
+						<option value="">请选择订单状态</option>
+						<option value="0">预定中</option>
+						<option value="1">已买</option>
+						<option value="2">已发货</option>
+					</select>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div class="panel panel-default">
+		<div class="panel-heading">订单管理</div>
+		<div class="table-responsive">
+			<table ui-jq="dataTable" class="table table-striped m-b-none">
+				<thead>
+					<tr>
+						<th style="width: 10%">操作</th>
+						<th style="width: 10%">编号</th>
+						<th style="width: 10%">客户名称</th>
+						<th style="width: 10%">预定时间</th>
+						<th style="width: 20%">订金</th>
+						<th style="width: 20%">尾款</th>
+						<th style="width: 10%">邮费</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="order in orders" ng-click="getOrderDetail(order)">
+						<td>
+							<a class="btn btn-xs btn-default" ng-hide="order.editing" ng-click="editItem(order)">Edit</a> 
+							<a class="btn btn-xs btn-default" ng-show="order.editing" ng-click="doneEditing(order)">Done</a>
+						</td>
+						<td>
+							<span ng-hide="order.editing">{{order.orderId}}</span>
+							<input type="text" class="form-control" ng-show="order.editing" ng-model="order.orderId">
+						</td>
+						<td>
+							<span ng-hide="order.editing">{{order.customerName}}</span>
+							<input type="text" class="form-control" ng-show="order.editing" ng-model="order.customerName">
+						</td>
+						<td>
+							<span ng-hide="order.editing">{{order.bookDate}}</span>
+							<input type="text" class="form-control" ng-show="order.editing" ng-model="order.bookDate">
+						</td>
+						<td>
+							<span ng-hide="order.editing">{{order.deposit}} ( {{order.depositType}} )</span>
+							<input type="text" class="form-control" ng-show="order.editing" ng-model="order.deposit" />
+							<input type="text" class="form-control" ng-show="order.editing" ng-model="order.depositType" />
+						</td>
+						<td>
+							<span ng-hide="order.editing">{{order.payment}} ( {{order.paymentType}} )</span>
+							<input type="text" class="form-control" ng-show="order.editing" ng-model="order.payment" />
+							<input type="text" class="form-control" ng-show="order.editing" ng-model="order.paymentType" />
+						</td>
+						<td>
+							<span ng-hide="order.editing">{{order.postprice}}</span>
+							<input type="text" class="form-control" ng-show="order.editing" ng-model="order.postprice">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+		
+		
+		
+	<div class="panel panel-default">
+		<div class="panel-heading">订单详细</div>
+		<div class="table-responsive">
+			<table ui-jq="dataTable" class="table table-striped m-b-none">
+				<thead>
+					<tr>
+						<th style="width: 5%">操作</th>
+						<th style="width: 5%">编号</th>
+						<th style="width: 20%">商品名称</th>
+						<th style="width: 8%">预定日期</th>
+						<th style="width: 8%">预定报价(JPY)</th>
+						<th style="width: 8%">预定报价(RMB)</th>
+						<th style="width: 8%">报价成本(JPY)</th>
+						<th style="width: 8%">报价成本(RMB)</th>
+						<th style="width: 5%">报价汇率</th>
+						<th style="width: 5%">实际成本(JPY)</th>
+						<th style="width: 5%">实际成本(RMB)</th>
+						<th style="width: 5%">实际汇率</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="orderDetail in orderDetails">
+						<td>
+							<a class="btn btn-xs btn-default" ng-hide="order.editing" ng-click="editItem(orderDetail)">Edit</a> 
+							<a class="btn btn-xs btn-default" ng-show="order.editing" ng-click="doneEditing(orderDetail)">Done</a>
+						</td>
+						<td>
+							<span ng-hide="orderDetail.editing">{{orderDetail.orderDetailId}}</span>
+							<input type="text" class="form-control" ng-show="orderDetail.editing" ng-model="orderDetail.orderDetailId">
+						</td>
+						<td>
+							<span ng-hide="orderDetail.editing">{{orderDetail.productName}}</span>
+							<input type="text" class="form-control" ng-show="orderDetail.editing" ng-model="orderDetail.productName">
+						</td>
+						<td>
+							<span ng-hide="orderDetail.editing">{{orderDetail.bookDate}}</span>
+							<input type="text" class="form-control" ng-show="orderDetail.editing" ng-model="orderDetail.bookDate">
+						</td>
+						<td>
+							<span ng-hide="orderDetail.editing">{{orderDetail.bookPrice}}</span>
+							<input type="text" class="form-control" ng-show="orderDetail.editing" ng-model="orderDetail.bookPrice">
+						</td>
+						<td>
+							<span>{{orderDetail.bookPrice * orderDetail.bookRate}}</span>
+						</td>
+						<td>
+							<span ng-hide="orderDetail.editing">{{orderDetail.estiBookPrice}}</span>
+							<input type="text" class="form-control" ng-show="orderDetail.editing" ng-model="orderDetail.estiBookPrice">
+						</td>
+						<td>
+							<span>{{orderDetail.estiBookPrice * orderDetail.bookRate}}</span>
+						</td>
+						<td>
+							<span ng-hide="orderDetail.editing">{{orderDetail.bookRate}}</span>
+							<input type="text" class="form-control" ng-show="orderDetail.editing" ng-model="orderDetail.bookRate">
+						</td>
+						<td>
+							<span ng-hide="orderDetail.editing">{{orderDetail.costPrice}}</span>
+							<input type="text" class="form-control" ng-show="orderDetail.editing" ng-model="orderDetail.costPrice">
+						</td>
+						<td>
+							<span>{{orderDetail.costPrice * orderDetail.costRate}}</span>
+						</td>
+						<td>
+							<span ng-hide="orderDetail.editing">{{orderDetail.costRate}}</span>
+							<input type="text" class="form-control" ng-show="orderDetail.editing" ng-model="orderDetail.costRate">
+						</td>
+						<td>
+							<span ng-hide="orderDetail.editing">{{orderDetail.status}}</span>
+							<input type="text" class="form-control" ng-show="orderDetail.editing" ng-model="orderDetail.status">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

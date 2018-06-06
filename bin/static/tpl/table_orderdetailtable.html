@@ -1,0 +1,176 @@
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">订单管理</h1>
+</div>
+<div class="wrapper-md" ng-controller="OrderController" ng-init="app.settings.container = false;">
+	<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-heading">筛选</div>
+			<div class="panel-body">
+				<div class="m-t m-b">
+				<div class="row m-b">
+					<div class="form-group col-sm-3">
+						<label class="control-label">客户</label>
+						<ui-select ng-model="selectedCustomer.customerId" theme="bootstrap" on-select="changeCustomerItem($item)">
+							<ui-select-match placeholder="Please select Customer...">{{$select.selected.customerName}}</ui-select-match>
+							<ui-select-choices repeat="customer.customerId as customer in customers | filter: $select.search" value="{{$select.selected.customerId}}" >
+								<div ng-bind-html="customer.customerName | highlight: $select.search"></div>
+								<small>微信ID： <span ng-bind-html="customer.wxId | highlight: $select.search"></span></small>
+							</ui-select-choices>
+						</ui-select>
+						
+					</div>
+					<div class="form-group col-sm-3">
+						<label class="control-label">订单状态</label>
+						<select ng-change="changeItem()" ng-model="selectedStatus" class="form-control m-b">
+							<option value="">请选择订单状态</option>
+							<option ng-repeat="status in statuses" value="{{status.statusCode}}">{{status.statusStr}}</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-sm-3">
+						<label class="control-label">当前汇率设置</label>
+						<input class="form-control" placeholder="Enter Price Rate" ng-model=currentRate type="text" class="form-control m-b">
+					</div>
+				</div>
+				<div class="row m-b">
+					<div class="form-group col-sm-6">
+						<label>商品名称</label> 
+						<ui-select ng-model="selectedProduct.productId" theme="bootstrap" on-select="changeProductItem($item)">
+							<ui-select-match placeholder="Please select Product...">{{$select.selected.productName}}</ui-select-match>
+							<ui-select-choices repeat="product.productId as product in products | filter: $select.search" value="{{$select.selected.productId}}" >
+								<span ng-bind-html="product.productName | highlight: $select.search"></span>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<div class="row">
+<div class="col-md-12">		
+	<div class="panel panel-default">
+		<div class="panel-heading">订单详细</div>
+		<div class="table-responsive">
+			<table ui-jq="dataTable" class="table table-striped m-b-none" ui-options="detailOptions"  id="orderDetailTable">
+				<thead>
+					<tr>
+						<th style="width: 4%">操作</th>
+						<th style="width: 4%">订单编号</th>
+						<th style="width: 6%">客户姓名</th>
+						<th style="width: 16%">商品名称</th>
+						<th style="width: 8%">预定日期</th>
+						<th style="width: 4%">数量</th>
+						<th style="width: 4%">预定<BR/>报价<BR/>(RMB)</th>
+						<th style="width: 4%">报价<BR/>成本<BR/>(JPY)</th>
+						<th style="width: 4%">报价<BR/>成本<BR/>(RMB)</th>
+						<th style="width: 4%">实际<BR/>成本<BR/>(JPY)</th>
+						<th style="width: 4%">实际<BR/>成本<BR/>(RMB)</th>
+						<th style="width: 4%">总售价<BR/>(RMB)</th>
+						<th style="width: 4%">总利润<BR/>(RMB)</th>
+						<th style="width: 4%">状态</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	</div>
+	</div>
+<div class="row">	
+<div class="col-md-12">	
+	<div class="panel panel-default">
+		<div class="panel-heading font-bold">下单</div>
+		<div class="panel-body">
+			<div class="m-t m-b">
+				<form novalidate name="myForm" ng-submit="addNewDetail()">
+					<input type="hidden"  ng-model="orderDetail.orderId">
+					<input type="hidden"  ng-model="orderDetail.orderDetailId">
+					<div class="row m-b">
+						<div class="form-group col-sm-4">
+							<label>商品名称</label> 
+							<ui-select ng-model="orderDetail.productId" theme="bootstrap" on-select="onSelectProduct($item)">
+								<ui-select-match placeholder="Please select Product...">{{$select.selected.productName}}</ui-select-match>
+								<ui-select-choices group-by="'group'" repeat="product.productId as product in products | filter: $select.search" value="{{$select.selected.productId}}" >
+									<span ng-bind-html="product.productName | highlight: $select.search"></span>
+								</ui-select-choices>
+							</ui-select>
+						</div>
+						<div class="form-group col-sm-3">
+							<label>客户姓名</label> 
+							<ui-select ng-model="orderDetail.customerId" theme="bootstrap" on-select="onSelectCustomer($item)" ng-disabled="updateDetail">
+								<ui-select-match placeholder="Please select Customer...">{{$select.selected.customerName}}</ui-select-match>
+								<ui-select-choices repeat="customer.customerId as customer in customers | filter: $select.search" value="{{$select.selected.customerId}}" >
+									<div ng-bind-html="customer.customerName | highlight: $select.search"></div>
+									<small>微信ID： <span ng-bind-html="customer.wxId | highlight: $select.search"></span></small>
+								</ui-select-choices>
+							</ui-select>
+						</div>
+						
+						
+						<div class="form-group col-sm-2">
+							<label>数量</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model="orderDetail.count" type="number">
+						</div>
+						<div class="form-group col-sm-3" >
+							<label>下单日期</label> 
+							<div class="input-group w-md">
+								<input type="text" class="form-control" datepicker-popup="{{orderDetaiFormat}}" ng-model="orderDetail.bookDate" is-open="orderDetailOpened" datepicker-options="orderDateOptions" ng-required="true" close-text="Close" name="orderDetailDate"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="orderDetailOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="row m-b">
+						<div class="form-group col-sm-2">
+							<label>报价成本(JPY)</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model="orderDetail.estiBookPriceJpy" type="number" >
+						</div>
+						<div class="form-group col-sm-2">
+							<label>报价成本(RMB)</label> 
+							<p>{{orderDetail.estiBookPriceJpy*currentRate | number:2}}</p>
+						</div>
+						<div class="form-group col-sm-2">
+							<label>实际成本(JPY)</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model="orderDetail.costPriceJpy" type="number">
+						</div>
+						<div class="form-group col-sm-2">
+							<label>实际成本(RMB)</label>
+							<p>{{orderDetail.costPriceJpy*currentRate| number:2}}</p>
+						</div>
+						<div class="form-group col-sm-2">
+							<label>预定报价(RMB)</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model="orderDetail.bookPrice" type="number">
+						</div>
+						<div class="form-group col-sm-2">
+							<label>总价(RMB)</label> 
+							<p>{{orderDetail.bookPrice*orderDetail.count| number:2}}</p>
+						</div>
+					</div>
+					<div class="row m-b">
+						<div class="form-group col-sm-4">
+							<label>状态</label> 
+							<select ng-model="orderDetail.status" class="form-control m-b">
+								<option value="">请选择订单状态</option>
+								<option ng-repeat="status in statuses" value="{{status.statusCode}}">{{status.statusStr}}</option>
+							</select>
+						</div>
+						<div class="form-group col-sm-2">
+							<label>利润(RMB)</label>
+							<p>{{orderDetail.bookPrice*orderDetail.count - orderDetail.costPriceJpy*currentRate*orderDetail.count | number:2}}</p>
+						</div>
+						
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-sm btn-success" value="确定">
+						<input id="clearButton" type="button" class="btn btn-sm btn-warning" ng-click="clearButton()" value="清空">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+</div>

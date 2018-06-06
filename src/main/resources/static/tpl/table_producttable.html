@@ -1,0 +1,139 @@
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">产品管理</h1>
+</div>
+<div class="wrapper-md" ng-controller="ProductController" ng-init="app.settings.container = false;">
+	<div class="panel panel-default">
+		<div class="panel-heading">筛选</div>
+		<div class="panel-body">
+			<div class="form-group col-sm-3">
+				<label class="control-label">分类</label>
+				<select ng-change="changeItem()" ng-model="selectedCategory" class="form-control m-m">
+					<option value='0'>Please select category</option>
+					<option ng-repeat="category in categorys" value="{{category.categoryId}}">{{category.categoryName}}</option>
+				</select>
+			</div>
+			<div class="form-group col-sm-3">
+				<label class="control-label">品牌</label>
+				<select ng-change="changeItem()" ng-model="selectedBrand" class="form-control m-m">
+					<option value='0'>Please select brand</option>
+					<option ng-repeat="brand in brands" value="{{brand.brandId}}">{{brand.brandName}}</option>
+				</select>
+			</div>
+			<div class="form-group col-sm-3">
+				<label class="control-label">当前汇率设置</label>
+				<input class="form-control" placeholder="Enter Price Rate" ng-model=currentRate type="text" class="form-control m-b">
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">产品管理</div>
+		<div class="table-responsive">
+			<table ui-jq="dataTable" class="table table-striped m-b-none" ui-options="options"  id="productTable">
+				<thead>
+					<tr>
+						<th style="width: 6%">品牌名称</th>
+						<th style="width: 5%">分类名称</th>
+						<th style="width: 12%">产品名称</th>
+						<th style="width: 12%">产品名称(日语)</th>
+						<th style="width: 4%">重量</th>
+						<th style="width: 4%">官方价格</th>
+						<th style="width: 8%">折扣方式</th>
+						<th style="width: 5%">折扣说明</th>
+						<th style="width: 4%">折扣</th>
+						<th style="width: 4%">成本价格(RMB)</th>
+						<th style="width: 8%">建议销售(RMB)</th>
+					</tr>
+				</thead>
+				<tbody >
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<div class="panel panel-default">
+		<div class="panel-heading font-bold">商品详细</div>
+		<div class="panel-body">
+			<div class="m-t m-b">
+				<form novalidate name="myForm" ng-submit="addNew()">
+					<input type="hidden"  ng-model="productDetail.productId">
+					<div class="row m-b">
+						<div class="form-group col-sm-4">
+							<label>分类</label>
+							<input type="hidden"  ng-model="productDetail.categoryId" value={{productDetail.category.categoryId}} />
+							<ui-select ng-model="productDetail.category" theme="bootstrap" on-select="onSelectCategory($item)">
+					            <ui-select-match placeholder="Please select category...">{{$select.selected.categoryName}}</ui-select-match>
+					            <ui-select-choices group-by="'group'" repeat="category.categoryId as category in categorys | filter: $select.search" value="{{$select.selected.categoryId}}" >
+					              <span ng-bind-html="category.categoryName | highlight: $select.search"></span>
+					            </ui-select-choices>
+					        </ui-select>
+						</div>
+						<div class="form-group col-sm-4">
+							<label>品牌</label>
+							<input type="hidden"  ng-model="productDetail.brandId" value={{productDetail.brand.brandId}}>
+							<ui-select ng-model="productDetail.brand" theme="bootstrap" on-select="onSelectBrand($item)">
+					            <ui-select-match placeholder="Please select brand...">{{$select.selected.brandName}}</ui-select-match>
+					            <ui-select-choices group-by="'group'" repeat="brand.brandId as brand in brands | filter: $select.search" value="{{$select.selected.brandId}}" >
+					              <span ng-bind-html="brand.brandName | highlight: $select.search"></span>
+					            </ui-select-choices>
+					         </ui-select>
+						</div>
+					</div>
+					<div class="row m-b">
+						<div class="form-group col-sm-4">
+							<label>产品名称</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model=productDetail.productName type="text">
+						</div>
+						<div class="form-group col-sm-4">
+							<label>产品名称(日语)</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model=productDetail.productNameJapan type="text">
+						</div>
+						<div class="form-group col-sm-2">
+							<label>官方价格</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model=productDetail.officalPrice type="number">
+						</div>
+					</div>
+					<div class="row m-b">
+						<div class="form-group col-sm-4">
+							<label>重量</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model=productDetail.weight type="number" currency-format="number"  >
+						</div>
+						<div class="form-group col-sm-4">
+							<label>折扣</label> 
+							<span class="m-b-none m-lg">说明:{{discountsetting.discountSettingComment}}</span>
+							<span class="m-b-none m-l"><strong>折扣率:{{discountsetting.discount}}</strong></span>
+							<select ng-model="discountsetting" class="form-control m-m" ng-options="x.discountSettingName for x in discountsettings">
+								<!-- <option value='0'>Please select category</option>
+								<option ng-repeat="discountsetting in discountsettings" value="{{discountsetting.idDiscountSetting}}">{{discountsetting.discountSettingName}} ------ {{discountsetting.discountSettingComment}} ------ {{discountsetting.discount}}</option>
+							 -->
+							</select>
+							
+						</div>
+						
+						<div class="form-group col-sm-4">
+							<label>折后价格(JPY)</label> 
+							<p>{{discountsetting.discount * productDetail.officalPrice|number:2}}</P>
+						</div>
+					</div>
+					<div class="row m-b">
+						<div class="form-group col-sm-4">
+							<label>成本价格(RMB)(含国际运费{{productDetail.weight * 0.06 | number:2}}元)</label> 
+							<p>{{((productDetail.officalPrice *discountsetting.discount ) * currentRate + productDetail.weight * 0.06)|number:2}}</p>
+						</div>
+						<div class="form-group col-sm-4">
+							<label>销售价格(RMB)</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model=productDetail.salePrice type="number" currency-format="number"  >
+						</div>
+					</div>
+					
+					<div class="row m-b">
+						<div class="form-group">
+							<input type="submit" class="btn btn-sm btn-success" value="确定">
+							<input id="clearButton" type="button" class="btn btn-sm btn-warning" value="清空">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

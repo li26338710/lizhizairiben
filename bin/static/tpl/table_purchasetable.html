@@ -1,0 +1,151 @@
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">采购管理</h1>
+</div>
+<div class="wrapper-md" ng-controller="PurchaseController" ng-init="app.settings.container = false;">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">筛选</div>
+		<div class="panel-body">
+			<div class="m-t m-b">
+				<div class="row m-b">
+					<div class="form-group col-sm-4">
+						<label class="col-sm-2 control-label">采购商</label>
+						<div class="col-sm-10">
+							<select ui-jq="chosen" class="w-md"  ng-change="changeItem()" ng-model="selectedMarket" >
+			                    <option value='0'>请选择采购商</option>
+			                    <option ng-repeat="market in markets" value="{{market.marketId}}">{{market.marketName}}</option>
+				            </select>
+						</div>
+					</div>
+					<div class="form-group col-sm-4">
+						<label class="col-sm-2 control-label">采购时间</label>
+						<div class="col-sm-10" ng-controller="DatepickerDemoCtrl">
+				            <div class="input-group w-md">
+				              <input type="text" class="form-control" datepicker-popup="{{format}}" is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" ng-model="startDate"/>
+				              <span class="input-group-btn">
+				                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+				              </span>
+				            </div>
+				        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<div class="row">
+	<div class="col-md-8">
+	<div class="panel panel-default">
+		<div class="panel-heading">采购管理</div>
+		<div class="table-responsive">
+			<table ui-jq="dataTable" class="table table-striped m-b-none" ui-options="options"  id="purchaseTable">
+				<thead>
+					<tr>
+						<th style="width: 5%">详细</th>
+						<th style="width: 12%">采购商名称</th>
+						<th style="width: 10%">付款总价</th>
+						<th style="width: 10%">采购汇率</th>
+						<th style="width: 10%">总价(RMB)</th>
+						<th style="width: 10%">使用积分</th>
+						<th style="width: 10%">采购日期</th>
+						<th style="width: 8%">付款类型</th>
+						<th style="width: 8%">付款卡号</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	</div>	
+	
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading font-bold">增加采购信息</div>
+			<div class="panel-body">
+			<div class="m-t m-b">
+				<form novalidate name="myForm" ng-submit="addNew()">
+					<div class="row m-b">
+						<div class="form-group col-sm-6">
+							<label>采购商</label>
+							<div class="input-group w-md">
+								<!-- <select ui-jq="chosen" class="w-md"  ng-change="changeItem()" ng-model="newPurchase.marketId" >
+				                    <option value='0'>请选择采购商</option>
+				                    <option ng-repeat="market in markets" value="{{market.marketId}}">{{market.marketName}}</option>
+					            </select> -->
+						          
+						          <ui-select ng-model="newPurchase.marketId" theme="bootstrap">
+									<ui-select-match placeholder="Please select Market...">{{$select.selected.marketName}}</ui-select-match>
+									<ui-select-choices group-by="'group'" repeat="market.marketId as market in markets | filter: $select.search" value="{{$select.selected.marketId}}" >
+										<span ng-bind-html="market.marketName | highlight: $select.search"></span>
+									</ui-select-choices>
+								</ui-select>
+						
+						
+          
+							</div>
+						</div>
+					</div>
+					<div class="row m-b">
+						<div class="form-group col-sm-6">
+							<label>购买日期</label>
+							<div class="input-group w-md">
+								<input type="text" class="form-control" datepicker-popup="{{purchaseFormat}}" ng-model="newPurchase.purchaseDate" is-open="purchaseOpened" datepicker-options="purchaseDateOptions" ng-required="true" close-text="Close" name="purchaseDate"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="purchaseOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="row m-b">
+						<div class="form-group col-sm-4">
+							<div class="form-group">
+								<label>日元总价</label> 
+								<input class="form-control" placeholder="Enter WXID" ng-model=newPurchase.price type="number">
+							</div>
+						</div>
+						<div class="form-group col-sm-4">
+							<div class="form-group">
+								<label>汇率</label> 
+								<input class="form-control" placeholder="Enter recommonder" ng-model=newPurchase.rate type="number">
+							</div>
+						</div>
+						<div class="form-group col-sm-4">
+							<div class="form-group">
+								<label>人民币总价</label> 
+								<p>{{newPurchase.price * newPurchase.rate * 0.01| number:2}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="row m-b">
+						<div class="form-group col-sm-4">
+							<div class="form-group">
+								<label>付款类型</label> 
+								<input class="form-control" placeholder="Enter Credit" ng-model=newPurchase.purchaseType type="text">
+							</div>	
+						</div>
+						<div class="form-group col-sm-4">
+							<div class="form-group">
+								<label>信用卡号</label> 
+								<input class="form-control" placeholder="Enter Credit" ng-model=newPurchase.cardNo type="text">
+							</div>
+						</div>
+						<div class="form-group col-sm-4">
+							<div class="form-group">
+								<label>获得积分</label> 
+								<input class="form-control" placeholder="Enter purchaseType" ng-model=newPurchase.score type="text">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-sm btn-success" value="确定">
+						<input id="clearButton" type="button" class="btn btn-sm btn-warning" value="清空">
+					</div>
+				</form>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>		
+
+</div>

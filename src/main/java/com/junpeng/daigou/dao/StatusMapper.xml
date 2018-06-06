@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.junpeng.daigou.dao.StatusMapper" >
+  <resultMap id="BaseResultMap" type="com.junpeng.daigou.model.Status" >
+    <id column="idstatus" property="idstatus" jdbcType="INTEGER" />
+    <result column="statustype" property="statustype" jdbcType="VARCHAR" />
+    <result column="statuscode" property="statuscode" jdbcType="VARCHAR" />
+    <result column="statusvalue" property="statusvalue" jdbcType="VARCHAR" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    idstatus, statustype, statuscode, statusvalue, comment
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from status
+    where idstatus = #{idstatus,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from status
+    where idstatus = #{idstatus,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.junpeng.daigou.model.Status" >
+    insert into status (idstatus, statustype, statuscode, 
+      statusvalue, comment)
+    values (#{idstatus,jdbcType=INTEGER}, #{statustype,jdbcType=VARCHAR}, #{statuscode,jdbcType=VARCHAR}, 
+      #{statusvalue,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.junpeng.daigou.model.Status" >
+    insert into status
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="idstatus != null" >
+        idstatus,
+      </if>
+      <if test="statustype != null" >
+        statustype,
+      </if>
+      <if test="statuscode != null" >
+        statuscode,
+      </if>
+      <if test="statusvalue != null" >
+        statusvalue,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="idstatus != null" >
+        #{idstatus,jdbcType=INTEGER},
+      </if>
+      <if test="statustype != null" >
+        #{statustype,jdbcType=VARCHAR},
+      </if>
+      <if test="statuscode != null" >
+        #{statuscode,jdbcType=VARCHAR},
+      </if>
+      <if test="statusvalue != null" >
+        #{statusvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.junpeng.daigou.model.Status" >
+    update status
+    <set >
+      <if test="statustype != null" >
+        statustype = #{statustype,jdbcType=VARCHAR},
+      </if>
+      <if test="statuscode != null" >
+        statuscode = #{statuscode,jdbcType=VARCHAR},
+      </if>
+      <if test="statusvalue != null" >
+        statusvalue = #{statusvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where idstatus = #{idstatus,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.junpeng.daigou.model.Status" >
+    update status
+    set statustype = #{statustype,jdbcType=VARCHAR},
+      statuscode = #{statuscode,jdbcType=VARCHAR},
+      statusvalue = #{statusvalue,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR}
+    where idstatus = #{idstatus,jdbcType=INTEGER}
+  </update>
+   <select id="getStatusByStatusType" resultType="com.junpeng.daigou.model.Status">
+    SELECT 
+    *
+	FROM
+    	status s
+	WHERE
+    	s.statustype =  #{statusType,jdbcType=VARCHAR}
+  </select>
+</mapper>

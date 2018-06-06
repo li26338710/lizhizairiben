@@ -1,0 +1,149 @@
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">订单管理</h1>
+</div>
+<div class="wrapper-md" ng-controller="OrderController" ng-init="app.settings.container = false;">
+	<div class="row">
+		
+	<div class="panel panel-default">
+		<div class="panel-heading">筛选</div>
+		<div class="panel-body">
+
+			<div class="form-group col-sm-3">
+				<label class="control-label">客户</label>
+				<select ng-change="changeItem()" ng-model="selectedCustomer" class="form-control m-b">
+					<option value='0'>请选择客户</option>
+					<option ng-repeat="customer in customers" value="{{customer.customerId}}">{{customer.customerName}} : {{customer.wxId}}</option>
+				</select>
+			</div>
+			<div class="form-group col-sm-3">
+				<label class="control-label">订单状态</label>
+				<select ng-change="changeItem()" ng-model="selectedStatus" class="form-control m-b">
+					<option value="">请选择订单状态</option>
+					<option ng-repeat="status in statuses" value="{{status.statusCode}}">{{status.statusStr}}</option>
+				</select>
+			</div>
+			
+			<div class="form-group col-sm-3">
+				<label class="control-label">当前汇率设置</label>
+				<input class="form-control" placeholder="Enter Price Rate" ng-model=currentRate type="text" class="form-control m-b">
+			</div>
+
+		</div>
+	</div>
+<div class="col-md-9">
+	<div class="panel panel-default">
+		<div class="panel-heading">订单管理</div>
+		<div class="table-responsive">
+			<table  ui-jq="dataTable" class="table table-striped m-b-none" ui-options="options"  id="orderTable">
+				<thead>
+					<tr>
+						<th style="width: 8%">编号</th>
+						<th style="width: 12%">客户名称</th>
+						<th style="width: 12%">微信ID</th>
+						<th style="width: 10%">预定时间</th>
+						<th style="width: 8%">订金</th>
+						<th style="width: 8%">尾款</th>
+						<th style="width: 8%">运费</th>
+						<th style="width: 8%">剩余未付款</th>
+						<th style="width: 8%">总价</th>
+						<th style="width: 8%">总利润</th>
+						<th style="width: 10%">订单状态</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+		</div>
+		<div class="col-md-3">
+			<div class="panel panel-default">
+				<div class="panel-heading font-bold">订单信息</div>
+				<div class="panel-body">
+					<div class="m-t m-b">
+						<form novalidate name="myForm" ng-submit="addNewOrder()">
+							<input type="hidden"  ng-model="order.orderId">
+							<div class="row m-b">
+								<div class="form-group col-sm-8">
+									<ui-select ng-model="order.customerId" theme="bootstrap" on-select="onSelectCustomer($item)">
+										<ui-select-match placeholder="Please select category...">{{$select.selected.customerName}}</ui-select-match>
+										<ui-select-choices group-by="'group'" repeat="customer.customerId as customer in customers | filter: $select.search" value="{{$select.selected.customerId}}" >
+											<span ng-bind-html="customer.customerName | highlight: $select.search"></span>
+											<small ng-bind-html="customer.wxid | highlight: $select.search"></small>
+										</ui-select-choices>
+									</ui-select>
+						        </div>
+							</div>
+							<div class="row m-b">
+								<div class="form-group col-sm-8">
+									<label>下单日期</label> 
+									<div class="input-group w-md" >
+										<input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="order.bookDate" is-open="orderOpened" datepicker-options="orderDateOptions" ng-required="true" close-text="Close" name="orderDate"/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default" ng-click="orderOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="row m-b">
+								<div class="form-group col-sm-6">
+									<label>定金</label> 
+									<input class="form-control" placeholder="Enter Brand Name" ng-model=order.deposit type="number">
+								</div>
+								<div class="form-group col-sm-6">
+									<label>定金支付类型</label> 
+									<select ng-model="order.depositType" class="form-control m-b"  >
+										<option value="0">微信支付</option>
+										<option value="1">支付宝支付</option>
+										<option value="2">淘宝下单</option>
+									</select>
+								</div>
+							</div>
+							<div class="row m-b">
+								<div class="form-group col-sm-6">
+									<label>第二次付款</label> 
+									<input class="form-control" placeholder="Enter Brand Name" ng-model=order.payment type="number">
+								</div>
+								<div class="form-group col-sm-6">
+									<label>付款支付类型</label> 
+									<select ng-model="order.paymentType" class="form-control m-b">
+										<option value="0">微信支付</option>
+										<option value="1">支付宝支付</option>
+										<option value="2">淘宝下单</option>
+									</select>
+								</div>
+							</div>
+							<div class="row m-b">
+								<div class="form-group col-sm-6">
+									<label>邮费</label> 
+									<input class="form-control" placeholder="Enter Brand Name" ng-model=order.postprice type="number">
+								</div>
+								<div class="form-group col-sm-6">
+									<label>剩余未付款</label> 
+									<p>{{order.sumprice - order.payment - order.deposit}}</p>
+								</div>
+							</div>
+							<div class="row m-b">
+								<div class="form-group col-sm-6">
+									<label>订单状态</label> 
+									<select ng-model="order.status" class="form-control m-b">
+										<option value="">请选择订单状态</option>
+										<option ng-repeat="status in statuses" value="{{status.statusCode}}">{{status.statusStr}}</option>
+									</select>
+				
+								</div>
+								<div class="form-group col-sm-6">
+									<label>总价</label> 
+									<p>{{order.sumprice}}</p> 
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="submit" class="btn btn-sm btn-success" value="确定">
+								<input id="clearButton" type="button" class="btn btn-sm btn-warning" value="清空">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>

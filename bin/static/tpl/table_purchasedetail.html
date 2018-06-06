@@ -1,0 +1,153 @@
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">采购管理</h1>
+</div>
+<div class="wrapper-md" ng-controller="PurchaseDetailController" ng-init="app.settings.container = false;">
+	<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-heading">筛选</div>
+			<div class="panel-body">
+				<div class="m-t m-b">
+					<div class="row m-b">
+						<div class="form-group col-sm-3">
+							<label class="control-label">采购商</label>
+							<ui-select ng-model="selectedMarket.marketId" theme="bootstrap" on-select="changeMarketItem($item)">
+								<ui-select-match placeholder="Please select Market...">{{$select.selected.marketName}}</ui-select-match>
+								<ui-select-choices group-by="'group'" repeat="market.marketId as market in markets | filter: $select.search" value="{{$select.selected.marketId}}" >
+									<span ng-bind-html="market.marketName | highlight: $select.search"></span>
+								</ui-select-choices>
+							</ui-select>
+						</div>
+						<div class="form-group col-sm-3">
+							<label class="control-label">品牌</label>
+							<ui-select ng-model="selectedBrand.brandId" theme="bootstrap" on-select="changeBrandItem($item)">
+								<ui-select-match placeholder="Please select Brand...">{{$select.selected.brandName}}</ui-select-match>
+								<ui-select-choices group-by="'group'" repeat="brand.brandId as brand in brands | filter: $select.search" value="{{$select.selected.brandId}}" >
+									<span ng-bind-html="brand.brandName | highlight: $select.search"></span>
+								</ui-select-choices>
+							</ui-select>
+						</div>
+						<div class="form-group col-sm-3">
+							<label class="control-label">商品名称</label>
+							<ui-select ng-model="selectedProduct.productId" theme="bootstrap" on-select="changeProductItem($item)">
+								<ui-select-match placeholder="Please select Product...">{{$select.selected.productName}}</ui-select-match>
+								<ui-select-choices group-by="'group'" repeat="product.productId as product in products | filter: $select.search" value="{{$select.selected.productId}}" >
+									<span ng-bind-html="product.productName | highlight: $select.search"></span>
+								</ui-select-choices>
+							</ui-select>
+						</div>
+					</div>
+				</div>
+				
+				
+									
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">			
+			<div class="panel panel-default">
+				<div class="panel-heading">采购详细</div>
+				<div class="table-responsive">
+					<table ui-jq="dataTable" class="table table-striped m-b-none" ui-options="detailOptions"  id="purchaseDetailTable">
+						<thead>
+							<tr>
+								<th style="width: 5%">操作</th>
+								<th style="width: 5%">订购编号</th>
+								<th style="width: 5%">采购商</th>
+								<th style="width: 5%">品牌</th>
+								<th style="width: 15%">商品名称</th>
+								<th style="width: 8%">数量</th>
+								<th style="width: 8%">单价(JPY)</th>
+								<th style="width: 8%">单价(RMB)</th>
+								<th style="width: 8%">总价(JPY)</th>
+								<th style="width: 8%">总价(RMB)</th>
+								<th style="width: 8%">汇率</th>
+								<!-- <th style="width: 5%">获得积分</th> -->
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+	<div class="row">	
+		<div class="col-md-12">	
+			<div class="panel panel-default">
+				<div class="panel-heading font-bold">下单</div>
+				<div class="panel-body">
+					<div class="m-t m-b">
+						<form novalidate name="myForm" ng-submit="addNewDetail()">
+							<input type="hidden"  ng-model="purchaseDetail.purchaseId">
+							<input type="hidden"  ng-model="purchaseDetail.purchaseDetailId">
+							<div class="row m-b">
+								<div class="form-group col-sm-4">
+									<label>商品名称</label> 
+									<ui-select ng-model="purchaseDetail.productId" theme="bootstrap" on-select="onSelectProduct($item)">
+										<ui-select-match placeholder="Please select Product...">{{$select.selected.productName}}</ui-select-match>
+										<ui-select-choices group-by="'group'" repeat="product.productId as product in products | filter: $select.search" value="{{$select.selected.productId}}" >
+											<span ng-bind-html="product.productName | highlight: $select.search"></span>
+										</ui-select-choices>
+									</ui-select>
+								</div>
+								<div class="form-group col-sm-3">
+									<label>采购商</label> 
+									<ui-select ng-model="purchaseDetail.marketId" theme="bootstrap" on-select="onSelectMarket($item)" ng-disabled="updateDetail">
+										<ui-select-match placeholder="Please select Market...">{{$select.selected.marketName}}</ui-select-match>
+										<ui-select-choices group-by="'group'" repeat="market.marketId as market in markets | filter: $select.search" value="{{$select.selected.marketId}}" >
+											<span ng-bind-html="market.marketName | highlight: $select.search"></span>
+										</ui-select-choices>
+									</ui-select>
+								</div>
+								
+								<div class="form-group col-sm-3">
+									<label>品牌</label> 
+									<ui-select ng-model="purchaseDetail.brandId" theme="bootstrap" on-select="onSelectBrand($item)">
+										<ui-select-match placeholder="Please select Brand...">{{$select.selected.brandName}}</ui-select-match>
+										<ui-select-choices group-by="'group'" repeat="brand.brandId as brand in brands | filter: $select.search" value="{{$select.selected.brandId}}" >
+											<span ng-bind-html="brand.brandName | highlight: $select.search"></span>
+										</ui-select-choices>
+									</ui-select>
+								</div>
+								
+								
+								<div class="form-group col-sm-2">
+									<label>数量</label> 
+									<input class="form-control" placeholder="Enter Brand Name" ng-model="purchaseDetail.count" type="number">
+								</div>
+							</div>
+							<div class="row m-b">
+								<div class="form-group col-sm-2">
+									<label>汇率</label> 
+									<input class="form-control" placeholder="Enter Rate" ng-model="purchaseDetail.rate" type="number">
+								</div>
+								<div class="form-group col-sm-2">
+									<label>单价(JPY)</label> 
+									<input class="form-control" placeholder="Enter Price" ng-model="purchaseDetail.singlePrice" type="number" >
+								</div>
+								<div class="form-group col-sm-2">
+									<label>单价(RMB)</label> 
+									<p>{{purchaseDetail.singlePrice*purchaseDetail.rate*0.01 | number:2}}</p>
+								</div>
+								<div class="form-group col-sm-2">
+									<label>总价(JPY)</label>
+									<p>{{purchaseDetail.singlePrice*purchaseDetail.count | number:2}}</p>
+								</div>
+								<div class="form-group col-sm-2">
+									<label>实际成本(RMB)</label>
+									<p>{{purchaseDetail.singlePrice*purchaseDetail.count*purchaseDetail.rate*0.01  | number:2}}</p>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="submit" class="btn btn-sm btn-success" value="确定">
+								<input id="clearButton" type="button" class="btn btn-sm btn-warning" ng-click="clearButton()" value="清空">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,71 @@
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">客户管理</h1>
+</div>
+<div class="wrapper-md" ng-controller="CustomerController" ng-init="app.settings.container = false;">
+	<div class="row">
+	<div class="col-md-8">
+		<div class="panel panel-default">
+			<div class="panel-heading">客户管理</div>
+			<div class="table-responsive">
+				<table ui-jq="dataTable" class="table table-striped m-b-none" ui-options="options" id="customerTable">
+					<thead>
+						<tr>
+							<th style="width: 10%">编号</th>
+							<th style="width: 15%">客户名称</th>
+							<th style="width: 10%">微信ID</th>
+							<th style="width: 20%">推荐者名称</th>
+							<th style="width: 10%">Tel</th>
+							<th style="width: 10%">收货地址</th>
+							<th style="width: 10%">信用度</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading font-bold">增加客户</div>
+			<div class="panel-body">
+			<div class="m-t m-b">
+				<form novalidate name="myForm" ng-submit="addNew()">
+					<input type="hidden" ng-model=newCustomer.customerId />
+					<div class="form-group">
+						<label>客户名称</label> 
+						<input class="form-control" placeholder="Enter Customer Name" ng-model=newCustomer.customerName type="text">
+					</div>
+					<div class="form-group">
+						<label>微信号</label> 
+						<input class="form-control" placeholder="Enter WXID" ng-model=newCustomer.wxId type="text">
+					</div>
+					<div class="form-group">
+						<label>推荐者</label> 
+						<input class="form-control" placeholder="Enter recommonder" ng-model=newCustomer.recommonder type="text">
+					</div>
+					<div class="form-group">
+						<label>联系电话</label> 
+						<input class="form-control" placeholder="Enter Telphone" ng-model=newCustomer.phone type="text">
+					</div>
+					<div class="form-group">
+						<label>收货地址</label> 
+						<input class="form-control" placeholder="Enter Address" ng-model=newCustomer.address type="text">
+					</div>
+					<div class="form-group">
+						<label>信用值</label> 
+						<input class="form-control" placeholder="Enter Credit" ng-model=newCustomer.credit type="text">
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-sm btn-success" value="确定">
+						<input id="clearButton" type="button" class="btn btn-sm btn-warning" value="清空">
+					</div>
+				</form>
+			</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	
+</div>

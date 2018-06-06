@@ -1,0 +1,46 @@
+<div class="bg-light lter b-b wrapper-md">
+  <h1 class="m-n font-thin h3">分类管理</h1>
+</div>
+<div class="wrapper-md" ng-controller="CategoryListController" ng-init="app.settings.container = false;">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					分类管理
+				</div>
+				<div class="table-responsive">
+					<table ui-jq="dataTable" ui-options="options" class="table table-striped m-b-none" id="categoryTable">
+						<thead>
+							<tr>
+								<th  style="width:20%">分类编号</th>
+								<th  style="width:25%">分类名称</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading font-bold">增加分类</div>
+				<div class="panel-body">
+					<div class="m-t m-b">
+						<form novalidate name="myForm" ng-submit="addNew()">
+							<input type="hidden" ng-model=newCategory.categoryId />
+							<div class="form-group">
+								<label>分类名称</label> 
+								<input class="form-control" placeholder="Enter Category Name" ng-model=newCategory.categoryName type="text">
+							</div>
+							<div class="form-group">
+								<input type="submit" class="btn btn-sm btn-success" value="确定">
+								<input id="clearButton" type="button" class="btn btn-sm btn-warning" value="清空">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+  </div>
+</div>

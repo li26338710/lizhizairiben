@@ -1,0 +1,57 @@
+<div class="bg-light lter b-b wrapper-md">
+	<h1 class="m-n font-thin h3">品牌管理</h1>
+</div>
+<div class="wrapper-md" ng-controller="BrandListController" ng-init="app.settings.container = false;">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">品牌管理</div>
+				<div class="table-responsive">
+					<table ui-jq="dataTable" class="table table-striped m-b-none" ui-options="options" id="brandTable">
+						<thead>
+							<tr>
+								<th data-toggle="true">编号</th>
+								<th>品牌名称</th>
+								<th>类型</th>
+								<th data-hide="phone,tablet">网址</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading font-bold">增加品牌</div>
+				<div class="panel-body">
+				<div class="m-t m-b">
+					<form novalidate name="myForm" ng-submit="addNew()">
+						<input type="hidden" ng-model=newBrand.brandId />
+						<div class="form-group">
+							<label>品牌名称</label> 
+							<input class="form-control" placeholder="Enter Brand Name" ng-model=newBrand.brandName type="text">
+						</div>
+						<div class="form-group">
+							<label>网址</label> 
+							<input class="form-control" placeholder="URL" ng-model=newBrand.url type="text">
+						</div>
+						<div class="form-group" style="padding-top: 25px;">
+							<div class="btn-group" ng-init="newBrand.type = '0'">
+								<label class="btn btn-sm btn-info" ng-model="newBrand.type" btn-radio="'0'"><i class="fa fa-check text-active"></i> 官网</label> 
+								<label class="btn btn-sm btn-success" ng-model="newBrand.type" btn-radio="'1'"><i class="fa fa-check text-active"></i> 电商</label>
+								<label class="btn btn-sm btn-primary" ng-model="newBrand.type" btn-radio="'2'"><i class="fa fa-check text-active"></i> 官网+电商</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<input type="submit" class="btn btn-sm btn-success" value="确定">
+							<input id="clearButton" type="button" class="btn btn-sm btn-warning" ng-click="clearButton()" value="清空">
+						</div>
+					</form>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

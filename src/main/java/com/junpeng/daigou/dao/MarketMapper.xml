@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.junpeng.daigou.dao.MarketMapper" >
+  <resultMap id="BaseResultMap" type="com.junpeng.daigou.model.Market" >
+    <id column="idmarket" jdbcType="INTEGER" property="idmarket" />
+    <result column="marketname" jdbcType="VARCHAR" property="marketname" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="createUser" jdbcType="VARCHAR" property="createuser" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="updateUser" jdbcType="VARCHAR" property="updateuser" />
+    <result column="updateDate" jdbcType="TIMESTAMP" property="updatedate" />
+    <result column="isactice" jdbcType="VARCHAR" property="isactice" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    idmarket, marketname, comment, createUser, createDate, updateUser, updateDate, isactice
+  </sql>
+  <select id="selectByExample" parameterType="com.junpeng.daigou.model.MarketExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from market
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from market
+    where idmarket = #{idmarket,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from market
+    where idmarket = #{idmarket,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.junpeng.daigou.model.MarketExample">
+    delete from market
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.junpeng.daigou.model.Market">
+    insert into market (idmarket, marketname, comment, 
+      createUser, createDate, updateUser, 
+      updateDate, isactice)
+    values (#{idmarket,jdbcType=INTEGER}, #{marketname,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, 
+      #{createuser,jdbcType=VARCHAR}, #{createdate,jdbcType=TIMESTAMP}, #{updateuser,jdbcType=VARCHAR}, 
+      #{updatedate,jdbcType=TIMESTAMP}, #{isactice,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.junpeng.daigou.model.Market">
+    insert into market
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="idmarket != null">
+        idmarket,
+      </if>
+      <if test="marketname != null">
+        marketname,
+      </if>
+      <if test="comment != null">
+        comment,
+      </if>
+      <if test="createuser != null">
+        createUser,
+      </if>
+      <if test="createdate != null">
+        createDate,
+      </if>
+      <if test="updateuser != null">
+        updateUser,
+      </if>
+      <if test="updatedate != null">
+        updateDate,
+      </if>
+      <if test="isactice != null">
+        isactice,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="idmarket != null">
+        #{idmarket,jdbcType=INTEGER},
+      </if>
+      <if test="marketname != null">
+        #{marketname,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null">
+        #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateuser != null">
+        #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedate != null">
+        #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isactice != null">
+        #{isactice,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.junpeng.daigou.model.MarketExample" resultType="java.lang.Integer">
+    select count(*) from market
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update market
+    <set>
+      <if test="record.idmarket != null">
+        idmarket = #{record.idmarket,jdbcType=INTEGER},
+      </if>
+      <if test="record.marketname != null">
+        marketname = #{record.marketname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.comment != null">
+        comment = #{record.comment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createuser != null">
+        createUser = #{record.createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdate != null">
+        createDate = #{record.createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateuser != null">
+        updateUser = #{record.updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updatedate != null">
+        updateDate = #{record.updatedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isactice != null">
+        isactice = #{record.isactice,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update market
+    set idmarket = #{record.idmarket,jdbcType=INTEGER},
+      marketname = #{record.marketname,jdbcType=VARCHAR},
+      comment = #{record.comment,jdbcType=VARCHAR},
+      createUser = #{record.createuser,jdbcType=VARCHAR},
+      createDate = #{record.createdate,jdbcType=TIMESTAMP},
+      updateUser = #{record.updateuser,jdbcType=VARCHAR},
+      updateDate = #{record.updatedate,jdbcType=TIMESTAMP},
+      isactice = #{record.isactice,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.junpeng.daigou.model.Market">
+    update market
+    <set>
+      <if test="marketname != null">
+        marketname = #{marketname,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null">
+        createUser = #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        createDate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateuser != null">
+        updateUser = #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedate != null">
+        updateDate = #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isactice != null">
+        isactice = #{isactice,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where idmarket = #{idmarket,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.junpeng.daigou.model.Market">
+    update market
+    set marketname = #{marketname,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
+      createUser = #{createuser,jdbcType=VARCHAR},
+      createDate = #{createdate,jdbcType=TIMESTAMP},
+      updateUser = #{updateuser,jdbcType=VARCHAR},
+      updateDate = #{updatedate,jdbcType=TIMESTAMP},
+      isactice = #{isactice,jdbcType=VARCHAR}
+    where idmarket = #{idmarket,jdbcType=INTEGER}
+  </update>
+</mapper>

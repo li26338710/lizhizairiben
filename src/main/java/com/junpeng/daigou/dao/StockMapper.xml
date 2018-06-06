@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.junpeng.daigou.dao.StockMapper" >
+  <resultMap id="BaseResultMap" type="com.junpeng.daigou.model.Stock" >
+    <id column="idstock" property="idstock" jdbcType="INTEGER" />
+    <result column="idproduct" property="idproduct" jdbcType="INTEGER" />
+    <result column="idorderdetail" property="idorderdetail" jdbcType="INTEGER" />
+    <result column="idpurchasedetail" property="idpurchasedetail" jdbcType="INTEGER" />
+    <result column="stockcount" property="stockcount" jdbcType="INTEGER" />
+    <result column="stockdate" property="stockdate" jdbcType="TIMESTAMP" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    idstock, idproduct, idorderdetail, idpurchasedetail, stockcount, stockdate, comment
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock
+    where idstock = #{idstock,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stock
+    where idstock = #{idstock,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.junpeng.daigou.model.Stock" >
+    insert into stock (idstock, idproduct, idorderdetail, 
+      idpurchasedetail, stockcount, stockdate, 
+      comment)
+    values (#{idstock,jdbcType=INTEGER}, #{idproduct,jdbcType=INTEGER}, #{idorderdetail,jdbcType=INTEGER}, 
+      #{idpurchasedetail,jdbcType=INTEGER}, #{stockcount,jdbcType=INTEGER}, #{stockdate,jdbcType=TIMESTAMP}, 
+      #{comment,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.junpeng.daigou.model.Stock" >
+    insert into stock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="idstock != null" >
+        idstock,
+      </if>
+      <if test="idproduct != null" >
+        idproduct,
+      </if>
+      <if test="idorderdetail != null" >
+        idorderdetail,
+      </if>
+      <if test="idpurchasedetail != null" >
+        idpurchasedetail,
+      </if>
+      <if test="stockcount != null" >
+        stockcount,
+      </if>
+      <if test="stockdate != null" >
+        stockdate,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="idstock != null" >
+        #{idstock,jdbcType=INTEGER},
+      </if>
+      <if test="idproduct != null" >
+        #{idproduct,jdbcType=INTEGER},
+      </if>
+      <if test="idorderdetail != null" >
+        #{idorderdetail,jdbcType=INTEGER},
+      </if>
+      <if test="idpurchasedetail != null" >
+        #{idpurchasedetail,jdbcType=INTEGER},
+      </if>
+      <if test="stockcount != null" >
+        #{stockcount,jdbcType=INTEGER},
+      </if>
+      <if test="stockdate != null" >
+        #{stockdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.junpeng.daigou.model.Stock" >
+    update stock
+    <set >
+      <if test="idproduct != null" >
+        idproduct = #{idproduct,jdbcType=INTEGER},
+      </if>
+      <if test="idorderdetail != null" >
+        idorderdetail = #{idorderdetail,jdbcType=INTEGER},
+      </if>
+      <if test="idpurchasedetail != null" >
+        idpurchasedetail = #{idpurchasedetail,jdbcType=INTEGER},
+      </if>
+      <if test="stockcount != null" >
+        stockcount = #{stockcount,jdbcType=INTEGER},
+      </if>
+      <if test="stockdate != null" >
+        stockdate = #{stockdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where idstock = #{idstock,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.junpeng.daigou.model.Stock" >
+    update stock
+    set idproduct = #{idproduct,jdbcType=INTEGER},
+      idorderdetail = #{idorderdetail,jdbcType=INTEGER},
+      idpurchasedetail = #{idpurchasedetail,jdbcType=INTEGER},
+      stockcount = #{stockcount,jdbcType=INTEGER},
+      stockdate = #{stockdate,jdbcType=TIMESTAMP},
+      comment = #{comment,jdbcType=VARCHAR}
+    where idstock = #{idstock,jdbcType=INTEGER}
+  </update>
+</mapper>
